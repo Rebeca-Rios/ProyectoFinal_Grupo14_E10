@@ -1,5 +1,7 @@
 # ProyectoFinal_Grupo14_E10
 
+***ABRIR***
+
 Equipo 10
 
 Se necesitan de dos archivos antes de ejecutar:

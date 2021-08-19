@@ -7,21 +7,21 @@
 /////////////////////////////////////////////////////////////////////////////////////////////
 //FUNCIONES PARA TODAS LAS PILAS
 
-//Función para crear un nodo
+//FunciÃ³n para crear un nodo
 nodo* crear_nodo(INFO info, int p){
     nodo* t = (nodo*)malloc(sizeof(nodo));
     t->sig = NULL;
     t->ant = NULL;
     t->info = info;
     t->p = p;	//prioridad
-    t->val = 0;	//valor numérico
+    t->val = 0;	//valor numÃ©rico
     t->oper = operador(info);	//determina si info es un operador (true) o un operando (false)
     return t;
 }
 
-//Función que determina si info es un operador (true) o un operando (false)
+//FunciÃ³n que determina si info es un operador (true) o un operando (false)
 bool operador(INFO info){
-	//Si info NO ES algún operador
+	//Si info NO ES algÃºn operador
 	if(info != '+'  &&  info != '-'  &&  info != '*'  &&  info != '/'  &&  info != '?'  &&  info != '%'  &&  info != '^'  &&  info != '('  &&  info != ')')
 		return false;
 	//Si info ES un operador
@@ -29,7 +29,7 @@ bool operador(INFO info){
 		return true;
 }
 
-//Función que crea una pil
+//FunciÃ³n que crea una pil
 PILA *crear_pila(){
     PILA* l = (PILA*) malloc(sizeof(PILA));
     l->top = l->bottom = NULL;
@@ -37,13 +37,13 @@ PILA *crear_pila(){
     return l;
 }
 
-//Función que revisa si una pila está vacía
+//FunciÃ³n que revisa si una pila estÃ¡ vacÃ­a
 bool es_vacia(PILA *l){
     if(l->top == NULL && l->bottom ==NULL) return true;
     return false;
 }
 
-//Función que vacía una pila
+//FunciÃ³n que vacÃ­a una pila
 bool vaciar(PILA *l){
     if(es_vacia(l)) return false;
     
@@ -58,7 +58,7 @@ bool vaciar(PILA *l){
     return true;
 }
 
-//Función que imprime una pila
+//FunciÃ³n que imprime una pila
 void imprimir_pila(PILA *l){
 	for(nodo* t = l->bottom; t != NULL; t = t->ant)
 	    printf("%c", t->info);
@@ -70,7 +70,7 @@ void imprimir_pila(PILA *l){
 /////////////////////////////////////////////////////////////////////////////////////////////
 //FUNCIONES PARA CONVERTIR DE INFIJA A POSTFIJA
 
-//Función que asigna una prioridad numérica a los operadores
+//FunciÃ³n que asigna una prioridad numÃ©rica a los operadores
 int prioridad(INFO info){
 	int p;
     if (info == '^') p = 3;
@@ -86,7 +86,7 @@ int prioridad(INFO info){
     return p;
 }
 
-//Función que reorganiza un caracter dependiendo si en o no un operador
+//FunciÃ³n que reorganiza un caracter dependiendo si en o no un operador
 void clasificar(char info, PILA *auxiliar, PILA *postfija){
 	if(!operador(info))	//Si en un OPERANDO
 		push(postfija, info);	//Agregar a la pila postfija
@@ -94,15 +94,15 @@ void clasificar(char info, PILA *auxiliar, PILA *postfija){
 		push_clasificar(auxiliar, postfija, info);	//Mandar a push_clasificar()
 }
 
-//Función para agregar un elemento a una pila
+//FunciÃ³n para agregar un elemento a una pila
 bool push(PILA *l, INFO info){
 	if(info != ')'){	//NUNCA se agrega un ')' a una pila
 		nodo* nuevo = crear_nodo(info, prioridad(info));
-	    if(l->top == NULL && l->bottom == NULL){	//Si la pila está vacía
+	    if(l->top == NULL && l->bottom == NULL){	//Si la pila estÃ¡ vacÃ­a
 	        l->top = l->bottom = nuevo;
 	        l->num++;
 	        return true;
-	    }else{	//Si la pila NO está vacía
+	    }else{	//Si la pila NO estÃ¡ vacÃ­a
 	        nuevo->sig = l->top;
 	        l->top->ant = nuevo;
 	        l->top = nuevo;
@@ -113,10 +113,10 @@ bool push(PILA *l, INFO info){
     return false;
 }
 
-//Función que maneja a los OPERADORES
+//FunciÃ³n que maneja a los OPERADORES
 bool push_clasificar(PILA *auxiliar, PILA *postfija, INFO info){	//Recibe una pila que ocupa como auxilia y otra donde va guardando postfija
     nodo* nuevo = crear_nodo(info, prioridad(info));  
-    if(!es_vacia(auxiliar)){ //si la pila auxiliar NO está vacía revisar:
+    if(!es_vacia(auxiliar)){ //si la pila auxiliar NO estÃ¡ vacÃ­a revisar:
     	if(nuevo->p != 0  && nuevo->p != -1){ //si el operador es diferente a '(' y diferente a ')'
     		while(!es_vacia(auxiliar)  &&  nuevo->p <= auxiliar->top->p) //mientras la prioridad del operador nuevo <= prioridad de la cima de auxiliar
     			pop(auxiliar, postfija, info); //sacar la cima
@@ -132,7 +132,7 @@ bool push_clasificar(PILA *auxiliar, PILA *postfija, INFO info){	//Recibe una pi
     return false;
 }
 
-//Función que hace pop a la pila auxiliar, pero antes copia la info a la pila de postfija
+//FunciÃ³n que hace pop a la pila auxiliar, pero antes copia la info a la pila de postfija
 void pop(PILA *auxiliar, PILA *postfija, INFO info){
     if(es_vacia(auxiliar)) return;
     
@@ -140,7 +140,7 @@ void pop(PILA *auxiliar, PILA *postfija, INFO info){
 		push(postfija, auxiliar->top->info); //agrega la info de la cima de auxiliar a la pila de salida
 	
 	//borrar la cima de auxiliar
-	if(auxiliar->num > 1){	//Si hay más de un elemento hacer:    
+	if(auxiliar->num > 1){	//Si hay mÃ¡s de un elemento hacer:    
 	    auxiliar->top = auxiliar->top->sig;
 		auxiliar->top->ant->sig = NULL;
 		free(auxiliar->top->ant);
@@ -150,41 +150,41 @@ void pop(PILA *auxiliar, PILA *postfija, INFO info){
 		vaciar(auxiliar);	
 }
 
-//Función que copia los nodos de la pila auxiliar a la pila postfija
+//FunciÃ³n que copia los nodos de la pila auxiliar a la pila postfija
 bool trasvasar(PILA *auxiliar, PILA *postfija){
 	if(es_vacia(auxiliar)) return false;
-	//Si la pila NO está vacía
+	//Si la pila NO estÃ¡ vacÃ­a
     nodo* temporal = auxiliar->top;
     while(temporal != NULL){
     	push(postfija, temporal->info); //agrega la info de temporal a la pila postfija
 	    temporal = temporal->sig;
     }
-    vaciar(auxiliar);	//Al final vacía la pila auxiliar
+    vaciar(auxiliar);	//Al final vacÃ­a la pila auxiliar
     return true;
 }
 
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////
-//FUNCIONES PARA EVALUAR LA EXPRESIÓN POSTFIJA
+//FUNCIONES PARA EVALUAR LA EXPRESIÃ“N POSTFIJA
 
-//Función que pide al usuario los valores de los operandos manualmente
+//FunciÃ³n que pide al usuario los valores de los operandos manualmente
 void leer_valores(PILA *postfija){
 	nodo *temporal = postfija->bottom;	//temporal ayuda a recorrer cada elemento de postfija
 	
-	//Se crea una pila auxiliar para que no se pida más de una vez la misma letra
+	//Se crea una pila auxiliar para que no se pida mÃ¡s de una vez la misma letra
 	PILA *auxiliar;
 	auxiliar = crear_pila();
 	
 	do{	//Ciclo que recorre cada elemento de postfija
 		if(temporal->oper == false){	//Si temporal es un OPERANDO:
 			bool i = false;
-			if(!es_vacia(auxiliar)){	//Si la pila auxiliar NO ESTÁ vacía
+			if(!es_vacia(auxiliar)){	//Si la pila auxiliar NO ESTÃ vacÃ­a
 				nodo *temporalAUX = auxiliar->top;
 				for(int e = 0; e < auxiliar->num; e++){	//Ciclo para recorrer cada elemento de auxiliar
 					if(temporalAUX->info == temporal->info){	//Si la variable de auxiliar == a la variable de postfija
 						temporal->val = temporalAUX->val;	//Asignar el valor de auxiliar a postfija
-						i = true;	//true es que SÍ se repite el operando
+						i = true;	//true es que SÃ se repite el operando
 					}
 					
 					//Para seguir recorriendo a auxiliar
@@ -203,7 +203,7 @@ void leer_valores(PILA *postfija){
 	}while(temporal != postfija->top);
 }
 
-//Función que lee los valores de los operandos desde un archivo
+//FunciÃ³n que lee los valores de los operandos desde un archivo
 void leer_archivo(PILA *postfija){
 	nodo *temporal = postfija->bottom;
 	
@@ -215,14 +215,15 @@ void leer_archivo(PILA *postfija){
 	
 	do{	//Ciclo para recorrer postfija
 		if(temporal->oper == false){	//Si en un operando
-	    	for(int i = 0; i < 100; i=i+5){	//Ciclo para recorrer el archivo
-	    		fseek(f, i, SEEK_SET);	//Iniciando por el principio del archivo, se avanzan i bites
-	    		fscanf(f, "%c %f", &letra, &valor);	//Se hace lectura de la letra y valor en esa posición
-	    		if(letra == temporal->info){	//Si la letra en el archivo es igual al operando
-	    			temporal->val = valor;	//Se copia su valor
-	    			i = 100;	//Para salir del for
+	    	bool r = false;	//false = no encontrado
+	    	while(!feof(f)  &&  r == false){	//Mientras no se llegue al final del archivo y no se encuentre la variable buscada
+	    		fscanf(f, "%c %f", &letra, &valor);	//Leer el archivo y obtener la letra y valor de esa lÃ­nea
+	    		if(letra == temporal->info){	//Si la letra del archivo es igual a la que se busca
+	    			temporal->val = valor;	//Asignar el valor del archivo a la variable en postfija
+	    			r = true;	//true = encontrado
 	    		}
 	    	}
+	    	rewind(f);	//Coloca el puntero del archivo al inicio de Ã©ste
 		}
 		temporal = temporal->ant;		
 	}while(temporal != postfija->top);
@@ -230,7 +231,7 @@ void leer_archivo(PILA *postfija){
 	fclose(f);	//Cierra el archivo
 }
 
-//Función que discrimina entre operadores y operandos 
+//FunciÃ³n que discrimina entre operadores y operandos 
 void evaluar(PILA *postfija, PILA *resultado){
 	nodo* temporal = postfija->bottom;
 	while(temporal != NULL){	//Con este ciclo se recorre la pila postfija nodo a nodo
@@ -244,26 +245,26 @@ void evaluar(PILA *postfija, PILA *resultado){
 	
 }
 
-//Función que agrega un elemento a una pila
-bool push_evaluar(PILA *l, INFO info, VAL valor){	//Recibe una pila, la información a agregar y el valor numérico
+//FunciÃ³n que agrega un elemento a una pila
+bool push_evaluar(PILA *l, INFO info, VAL valor){	//Recibe una pila, la informaciÃ³n a agregar y el valor numÃ©rico
 		nodo* nuevo = crear_nodo(info, prioridad(info));
-	    if(l->top == NULL && l->bottom == NULL){	//Si la pila está vacía
+	    if(l->top == NULL && l->bottom == NULL){	//Si la pila estÃ¡ vacÃ­a
 	        l->top = l->bottom = nuevo;
-	        nuevo->val = valor;	//Valor numérico 
+	        nuevo->val = valor;	//Valor numÃ©rico 
 	        l->num++;
 	        return true;
-	    }else{	//Si NO está vacía
+	    }else{	//Si NO estÃ¡ vacÃ­a
 	        nuevo->sig = l->top;
 	        l->top->ant = nuevo;
 	        l->top = nuevo;
-	        nuevo->val = valor;	//Valor numérico
+	        nuevo->val = valor;	//Valor numÃ©rico
 	        l->num++;
 	        return true;
 	    }
     return false;
 }
 
-//Función que opera los valores de la pila resultado de acuerdo a un operador
+//FunciÃ³n que opera los valores de la pila resultado de acuerdo a un operador
 void evaluar_clasificar(PILA *postfija, PILA *resultado, INFO info){	//recibe la pila postfija, la de salida y el operador
 	//Se crean variables auxiliares para la cima(b) de la pila postfija, el elemento siguiente(a) y el resultado c
 	VAL a = resultado->top->sig->val;	//segundo elemento de la pila postfija
@@ -284,14 +285,14 @@ void evaluar_clasificar(PILA *postfija, PILA *resultado, INFO info){	//recibe la
     else if (info == '-')
     	c = a - b;
         
-    if(info != '?'){	//Si el operador NO es raíz
+    if(info != '?'){	//Si el operador NO es raÃ­z
     	resultado->top->sig->val = c;	//Se reescribe el valor de a (segundo elemento de postfija) por el de c (el resultado)
 	    pop_evaluar(resultado);	//Se elimina la cima de postfija
-    } else	//Si ES raíz
+    } else	//Si ES raÃ­z
     	resultado->top->val = c;	//Se reescribe el valor de b (cima de postfija) por el de c (el resultado)
 }
 
-//Función que hace pop a una pila
+//FunciÃ³n que hace pop a una pila
 void pop_evaluar(PILA *l){
     if(es_vacia(l)) return;
 	if(l->num > 1){	    
